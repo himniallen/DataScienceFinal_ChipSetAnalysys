@@ -9,10 +9,10 @@ from bs4 import BeautifulSoup
 import requests
 import kaggle
 
-file_path = "taxis_cleaned.csv"
+file_path = "taxis.csv"
 if not os.path.exists(file_path):
-  print("File doesn't currently exist... Contacting Kaggle api to create a new csv file...")
-  kaggle.api.dataset_download_files("abdmental01/taxis-dataset-yellow-taxi", unzip=True)
+  print("File doesn't currently exist locally. Contacting Kaggle api to create a new csv file...")
+  kaggle.api.dataset_download_files("enocknkuya/tax-dropoff", unzip=True)
       
 print("Ready to work with the data: " + file_path)
 taxi_data = pd.read_csv(file_path).dropna()
