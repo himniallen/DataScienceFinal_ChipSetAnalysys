@@ -1,3 +1,6 @@
+#Not committing so that it will force us to test the kaggle stuff
+taxis.csv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
