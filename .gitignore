@@ -1,4 +1,4 @@
-#Not committing so that it will force us to test the kaggle stuff
+# Not committing so that it will force us to test the kaggle api pull on first run
 taxis.csv
 
 # Byte-compiled / optimized / DLL files
