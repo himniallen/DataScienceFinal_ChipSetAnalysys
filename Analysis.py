@@ -30,30 +30,34 @@ taxi_data.dropna()
 # Reshaping data - Creating new columns based on existing data that will help our analysis
 taxi_data['pickup'] = pd.to_datetime(taxi_data['pickup'])
 taxi_data['hour_of_pickup'] = taxi_data['pickup'].dt.hour
-avg_tip_per_ride_per_hr = taxi_data.groupby('hour_of_pickup')['tip'].mean()
+avg_tip_amt_per_hr = taxi_data.groupby('hour_of_pickup')['tip'].mean()
 
 # convert to counts,
 hour_counts_pickup = taxi_data['hour_of_pickup'].value_counts().sort_index()
+print(hour_counts_pickup)
+print(hour_counts_pickup.index)
 
-plt.plot(hour_counts_pickup.index, avg_tip_per_ride_per_hr.values)
-plt.xlabel('Hour of Day')
-plt.ylabel('Average Tip Amount') 
-plt.title('Average Tips by Hour')
-plt.grid(True)
-plt.legend()
-plt.show()
-
-sns.barplot(x=hour_counts_pickup.index, y=avg_tip_per_ride_per_hr.values)
+# 1
+sns.barplot(x=hour_counts_pickup.index, y=avg_tip_amt_per_hr.values)
 plt.xlabel('Hour of Day')
 plt.ylabel('Average Tip Amount')
-plt.title('Average Tips by Hour')
-plt.grid(True)
-plt.legend()
+plt.title('Average Tip Amounts by Hour')
 plt.show()
 
+# 2
+sns.barplot(x=hour_counts_pickup.index, y=hour_counts_pickup.values)
+plt.xlabel('Hour of Day')
+plt.ylabel('Number of Pickups')
+plt.title('Number of Pickups by Hour')
+plt.show()
 
-
-
+# 3
+# The average tips vs hour of day
+sns.scatterplot(x=hour_counts_pickup, y=avg_tip_amt_per_hr.values, hue=hour_counts_pickup.index)
+plt.xlabel("Number of Pickups")
+plt.ylabel("Average Tip Amount")
+plt.title("Average tip amts by hour vs number of pickups")
+plt.show()
 
 
 

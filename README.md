@@ -10,13 +10,18 @@
 - Cleaning and reshaping of the data (with code included)
    - We will remove nas, and we will create new columns with new data calculated from the existing data, such as the hour of day as discrete values, and the average tip amount for each hour.
 - Exploratory analysis and visualizations. (At least 4 visualizations)
-   1. Line chart that shows time of day vs average tip amount per ride.
-   2. Bar chart for #1 to easily distinguish the hours of the day since we made those values discrete.
-   3. Line chart showing the number of rides per hour.
+   1. Bar chart that shows time of day vs average tip amount per ride by hour. Bar chart because it can easily distinguish the hours of the day since we made those values discrete.
+   2. Bar chart showing the number of pickups happen per hour (this helps us gather which times of day are most popular, which helps us because if tips are higher but the work is slow, you won't be making more money).
+   3. Scatter plot showing the number of pickups at the time of day vs tip amount
+   4. ???
 - Use of at least two analysis techniques such as multiple regression or logistic regression. In
 addition you should highlight the success of such models and briefly explain various iterations.
+   - Multilinear regression (throw in a bunch of variables to predict tip amount)
+   - ???
 - Communication of results using plots, tables in a well-organized report. The report should over
 view the data, highlight abnormalities or trends, and summarize iterations of models. This
 should be professionally done.
+   - Take screenshots of the graphs, summary of our findings, summarize the data in a report.
  - Final submission must also include a clean and organized file with reproducible code. Questions
 will be asked regarding the code. Students should be able to explain what each part is doing.
+   - Go over the code as a team so we all know what it does. Agree on the things we want to chart and the analyses we want to perform, and put them in the code file.  
