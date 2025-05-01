@@ -7,13 +7,13 @@
    - Can we predict tip amount based on time of day or other variables?
 - Data acquisition (e.g., scraping/API, or strong justification for choosing pre-cleaned open data)
    - We get our data on Kagglehub. enocknkuya/tax-dropoff
-- Cleaning and reshaping of the data (with code included)
+- Cleaning and reshaping of the data
    - We will remove nas, and we will create new columns with new data calculated from the existing data, such as the hour of day as discrete values, and the average tip amount for each hour.
 - Exploratory analysis and visualizations. (At least 4 visualizations)
    1. Bar chart that shows time of day vs average tip amount per ride by hour. Bar chart because it can easily distinguish the hours of the day since we made those values discrete.
    2. Bar chart showing the number of pickups happen per hour (this helps us gather which times of day are most popular, which helps us because if tips are higher but the work is slow, you won't be making more money).
    3. Scatter plot showing the number of pickups at the time of day vs tip amount
-   4. ???
+   4. Bar chart showing the median tip amount per hour. 
 - Use of at least two analysis techniques such as multiple regression or logistic regression. In
 addition you should highlight the success of such models and briefly explain various iterations.
    - Multilinear regression (throw in a bunch of variables to predict tip amount)
