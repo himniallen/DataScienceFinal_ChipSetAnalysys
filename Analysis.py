@@ -80,7 +80,7 @@ plt.title('Median Tip Amounts by Hour')
 # Multiple Regression
 # number of passengers? tips? Hour of day?
 
-X = taxi_data[["passengers", "distance"]]
+X = taxi_data[["distance"]]
 taxi_data["payment"] = taxi_data["payment"].astype(str).str.strip()
 payment_dummies = pd.get_dummies(taxi_data["payment"], drop_first=True).astype(int)
 color_dummies = pd.get_dummies(taxi_data["color"], drop_first=True).astype(int)
