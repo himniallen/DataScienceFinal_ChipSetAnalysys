@@ -13,11 +13,11 @@
    1. Bar chart that shows time of day vs average tip amount per ride by hour. Bar chart because it can easily distinguish the hours of the day since we made those values discrete.
    2. Bar chart showing the number of pickups happen per hour (this helps us gather which times of day are most popular, which helps us because if tips are higher but the work is slow, you won't be making more money).
    3. Scatter plot showing the number of pickups at the time of day vs tip amount
-   4. Bar chart showing the median tip amount per hour. 
+   4. Scatter plots of the logistic regressions of distance and fare
 - Use of at least two analysis techniques such as multiple regression or logistic regression. In
 addition you should highlight the success of such models and briefly explain various iterations.
    - Multilinear regression (throw in a bunch of variables to predict tip amount)
-   - ???
+   - Logistic regression model of distance x fare
 - Communication of results using plots, tables in a well-organized report. The report should over
 view the data, highlight abnormalities or trends, and summarize iterations of models. This
 should be professionally done.

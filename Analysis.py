@@ -40,21 +40,21 @@ median_tip_amt_per_hr = taxi_data.groupby('hour_of_pickup')['tip'].median()
 # convert to counts,
 hour_counts_pickup = taxi_data['hour_of_pickup'].value_counts().sort_index()
 
-# 1
+# Visualization 1
 sns.barplot(x=hour_counts_pickup.index, y=avg_tip_amt_per_hr.values)
 plt.xlabel('Hour of Day')
 plt.ylabel('Average Tip Amount')
 plt.title('Average Tip Amounts by Hour')
-# plt.show()
+plt.show()
 
-# 2
+# Visualization 2
 sns.barplot(x=hour_counts_pickup.index, y=hour_counts_pickup.values)
 plt.xlabel('Hour of Day')
 plt.ylabel('Number of Pickups')
 plt.title('Number of Pickups by Hour')
-# plt.show()
+plt.show()
 
-# 3
+# Visualization 3
 # The average tips vs hour of day
 sns.scatterplot(x=hour_counts_pickup.index, y=avg_tip_amt_per_hr.values, hue=hour_counts_pickup)
 plt.xlabel("Hour of day")
@@ -63,23 +63,15 @@ plt.title("Average tip amts by hour vs Hour of day")
 plt.xticks(ticks=hour_counts_pickup.index)
 plt.ylim(bottom=0)
 plt.legend(title="Customer Volume")
-# plt.show()
+plt.show()
 
-# 4 
-sns.barplot(x=hour_counts_pickup.index, y=median_tip_amt_per_hr.values)
-plt.xlabel('Hour of Day')
-plt.ylabel('Median Tip Amount')
-plt.title('Median Tip Amounts by Hour')
-# plt.show()
-
+# Visualization 4 is included in analysis technique 2.
 
 
 # Use of at least two analysis techniques such as multiple regression or logistic regression. In
 # addition you should highlight the success of such models and briefly explain various iterations
 
-# Multiple Regression
-# number of passengers? tips? Hour of day?
-
+# Analysis Technique 1: Multiple Regression
 X = taxi_data[["distance"]]
 taxi_data["payment"] = taxi_data["payment"].astype(str).str.strip()
 payment_dummies = pd.get_dummies(taxi_data["payment"], drop_first=True).astype(int)
@@ -95,3 +87,20 @@ model = sm.OLS(y, X).fit()
 print(model.summary())
 
 
+
+# Analysis Technique 2: Logistic regression model: Distance x Fare
+# We chose this one because it's the only one that looks remotely nonlinear but not all over the place.
+
+taxi_data['fare_square'] = taxi_data['fare'] ** 2
+taxi_data['fare_sqrt'] = np.sqrt(taxi_data['fare'])
+
+# Visualization 4
+plt.scatter(x=taxi_data['distance'], y=taxi_data['fare_square'])
+plt.xlabel('Distance')
+plt.ylabel('Fare squared')
+plt.show()
+
+plt.scatter(x=taxi_data['distance'], y=taxi_data['fare_sqrt'])
+plt.xlabel('Distance')
+plt.ylabel('Fare square rooted')
+plt.show()
