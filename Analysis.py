@@ -1,7 +1,6 @@
 # Taxi data set: https://www.kaggle.com/datasets/enocknkuya/tax-dropoff
 # Team is Dorian, Jidapa, and Himni
 
-
 import seaborn as sns
 import statsmodels.api as sm
 import numpy as np
@@ -12,7 +11,6 @@ import kaggle
 import matplotlib.pyplot as plt
 
 
-
 file_path = "taxis.csv"
 if not os.path.exists(file_path):
   print("File doesn't currently exist locally. Contacting Kaggle api to create a new csv file...")
@@ -21,6 +19,7 @@ if not os.path.exists(file_path):
       
 print("Ready to work with the data: " + file_path)
 taxi_data = pd.read_csv(file_path)
+print(taxi_data.head())
 
 # Clearly defined problem or question related to the dataset:
 # When is the optimal time of day to drive to make the most in tips? 
@@ -30,6 +29,8 @@ taxi_data = pd.read_csv(file_path)
 taxi_data.dropna()
 taxi_data = taxi_data.dropna(subset=["payment"])
 
+sns.pairplot(taxi_data)
+plt.plot()
 
 # Reshaping data - Creating new columns based on existing data that will help our analysis
 taxi_data['pickup'] = pd.to_datetime(taxi_data['pickup'])
@@ -39,6 +40,7 @@ median_tip_amt_per_hr = taxi_data.groupby('hour_of_pickup')['tip'].median()
 
 # convert to counts,
 hour_counts_pickup = taxi_data['hour_of_pickup'].value_counts().sort_index()
+
 
 # Visualization 1
 sns.barplot(x=hour_counts_pickup.index, y=avg_tip_amt_per_hr.values)
@@ -87,7 +89,6 @@ model = sm.OLS(y, X).fit()
 print(model.summary())
 
 
-
 # Analysis Technique 2: Logistic regression model: Distance x Fare
 # We chose this one because it's the only one that looks remotely nonlinear but not all over the place.
 plt.scatter(x=taxi_data['distance'], y=taxi_data['fare'])
@@ -95,10 +96,10 @@ plt.xlabel('Distance')
 plt.ylabel('Fare')
 plt.show()
 
-taxi_data['fare_sqrt'] = np.sqrt(taxi_data['fare'])
+taxi_data['fare_square'] = taxi_data['fare'] ** 2
 
 # Visualization 4
-plt.scatter(x=taxi_data['distance'], y=taxi_data['fare_sqrt'])
+plt.scatter(x=taxi_data['distance'], y=taxi_data['fare_square'])
 plt.xlabel('Distance')
-plt.ylabel('Fare square rooted')
+plt.ylabel('Fare squared')
 plt.show()
