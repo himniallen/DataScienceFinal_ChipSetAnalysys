@@ -90,16 +90,14 @@ print(model.summary())
 
 # Analysis Technique 2: Logistic regression model: Distance x Fare
 # We chose this one because it's the only one that looks remotely nonlinear but not all over the place.
+plt.scatter(x=taxi_data['distance'], y=taxi_data['fare'])
+plt.xlabel('Distance')
+plt.ylabel('Fare')
+plt.show()
 
-taxi_data['fare_square'] = taxi_data['fare'] ** 2
 taxi_data['fare_sqrt'] = np.sqrt(taxi_data['fare'])
 
 # Visualization 4
-plt.scatter(x=taxi_data['distance'], y=taxi_data['fare_square'])
-plt.xlabel('Distance')
-plt.ylabel('Fare squared')
-plt.show()
-
 plt.scatter(x=taxi_data['distance'], y=taxi_data['fare_sqrt'])
 plt.xlabel('Distance')
 plt.ylabel('Fare square rooted')
