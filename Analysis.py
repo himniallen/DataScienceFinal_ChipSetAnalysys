@@ -28,6 +28,8 @@ taxi_data = pd.read_csv(file_path)
 
 # Cleaning data
 taxi_data.dropna()
+taxi_data = taxi_data.dropna(subset=["payment"])
+
 
 # Reshaping data - Creating new columns based on existing data that will help our analysis
 taxi_data['pickup'] = pd.to_datetime(taxi_data['pickup'])
@@ -80,12 +82,11 @@ plt.title('Median Tip Amounts by Hour')
 
 X = taxi_data[["passengers", "distance"]]
 taxi_data["payment"] = taxi_data["payment"].astype(str).str.strip()
-payment_dummies = pd.get_dummies(taxi_data["payment"], drop_first=True)
-print(payment_dummies.dtypes)
-# color_dummies = pd.get_dummies(taxi_data["color"], drop_first=True)
-# hour_dummies = pd.get_dummies(taxi_data["hour_of_pickup"], drop_first=True)
+payment_dummies = pd.get_dummies(taxi_data["payment"], drop_first=True).astype(int)
+color_dummies = pd.get_dummies(taxi_data["color"], drop_first=True).astype(int)
+hour_dummies = pd.get_dummies(taxi_data["hour_of_pickup"], drop_first=True).astype(int)
 
-# X = pd.concat([X, payment_dummies], axis=1)
+X = pd.concat([X, payment_dummies, color_dummies, hour_dummies], axis=1)
 X = sm.add_constant(X)
 y = taxi_data['tip']
 
