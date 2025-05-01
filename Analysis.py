@@ -79,6 +79,7 @@ plt.title('Median Tip Amounts by Hour')
 # number of passengers? tips? Hour of day?
 
 X = taxi_data[["passengers", "distance"]]
+taxi_data["payment"] = taxi_data["payment"].astype(str).str.strip()
 payment_dummies = pd.get_dummies(taxi_data["payment"], drop_first=True)
 print(payment_dummies.dtypes)
 # color_dummies = pd.get_dummies(taxi_data["color"], drop_first=True)
