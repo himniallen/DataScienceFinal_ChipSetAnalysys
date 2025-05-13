@@ -1,6 +1,5 @@
-# Taxi's data set,
+# Taxi data set: https://www.kaggle.com/datasets/enocknkuya/tax-dropoff
 # Team is Dorian, Jidapa, and Himni
-
 
 import seaborn as sns
 import statsmodels.api as sm
@@ -15,10 +14,12 @@ import matplotlib.pyplot as plt
 file_path = "taxis.csv"
 if not os.path.exists(file_path):
   print("File doesn't currently exist locally. Contacting Kaggle api to create a new csv file...")
+  # Fetching data from API:
   kaggle.api.dataset_download_files("enocknkuya/tax-dropoff", unzip=True)
       
 print("Ready to work with the data: " + file_path)
 taxi_data = pd.read_csv(file_path)
+print(taxi_data.head())
 
 # Clearly defined problem or question related to the dataset:
 # When is the optimal time of day to drive to make the most in tips? 
@@ -26,99 +27,79 @@ taxi_data = pd.read_csv(file_path)
 
 # Cleaning data
 taxi_data.dropna()
+taxi_data = taxi_data.dropna(subset=["payment"])
+
+sns.pairplot(taxi_data)
+plt.plot()
 
 # Reshaping data - Creating new columns based on existing data that will help our analysis
 taxi_data['pickup'] = pd.to_datetime(taxi_data['pickup'])
-taxi_data['dropoff'] = pd.to_datetime(taxi_data['dropoff'])
-taxi_data['duration'] = taxi_data['dropoff'] - taxi_data['pickup']
-taxi_data['duration_minutes'] = taxi_data['duration'].dt.total_seconds() / 60
-taxi_data['is_yellow'] = (taxi_data['color'] == 'yellow').astype(int)  
 taxi_data['hour_of_pickup'] = taxi_data['pickup'].dt.hour
-taxi_data['hour_of_dropoff'] = taxi_data['dropoff'].dt.hour
-tips_hour_average = taxi_data.groupby('hour_of_pickup')['tip'].mean()
-print(tips_hour_average)
-
-def time_to_seconds(t):
-    return t.hour * 3600 + t.minute * 60 + t.second
-taxi_data['pickup_seconds'] = taxi_data['pickup'].apply(time_to_seconds)
-taxi_data['dropoff_seconds'] = taxi_data['dropoff'].apply(time_to_seconds)
-
-
-# Exploratory Analysis and Visualizations
-
-# 1
-plt.scatter(taxi_data['pickup_seconds'], taxi_data['dropoff_seconds'])
-plt.xlabel('Pickup Time (seconds since midnight)')
-plt.ylabel('Dropoff Time (seconds since midnight)')
-plt.title('Pickup vs Dropoff Times (in seconds)')
-#plt.show()
-
-
-# hour visualization
+avg_tip_amt_per_hr = taxi_data.groupby('hour_of_pickup')['tip'].mean()
+median_tip_amt_per_hr = taxi_data.groupby('hour_of_pickup')['tip'].median()
 
 # convert to counts,
 hour_counts_pickup = taxi_data['hour_of_pickup'].value_counts().sort_index()
 
-# 2
+
+# Visualization 1
+sns.barplot(x=hour_counts_pickup.index, y=avg_tip_amt_per_hr.values)
+plt.xlabel('Hour of Day')
+plt.ylabel('Average Tip Amount')
+plt.title('Average Tip Amounts by Hour')
+plt.show()
+
+# Visualization 2
 sns.barplot(x=hour_counts_pickup.index, y=hour_counts_pickup.values)
 plt.xlabel('Hour of Day')
 plt.ylabel('Number of Pickups')
 plt.title('Number of Pickups by Hour')
-#plt.show()
+plt.show()
 
-# now for dropoff
-hour_counts_dropoff = taxi_data['hour_of_dropoff'].value_counts().sort_index()
+# Visualization 3
+# The average tips vs hour of day
+sns.scatterplot(x=hour_counts_pickup.index, y=avg_tip_amt_per_hr.values, hue=hour_counts_pickup)
+plt.xlabel("Hour of day")
+plt.ylabel("Average Tip Amount")
+plt.title("Average tip amts by hour vs Hour of day")
+plt.xticks(ticks=hour_counts_pickup.index)
+plt.ylim(bottom=0)
+plt.legend(title="Customer Volume")
+plt.show()
 
-# 2
-sns.barplot(x=hour_counts_dropoff.index, y=hour_counts_dropoff.values)
-plt.xlabel('Hour of Day')
-plt.ylabel('Number of Dropoffs')
-plt.title('Number of Dropoffs by Hour')
-#plt.show()
-
-# 3
-sns.barplot(x=hour_counts_pickup.index, y=tips_hour_average.values)
-plt.xlabel('Hour of Day')
-plt.ylabel('Average Tips')
-plt.title('Average Tips by Hour')
-plt.legend()
-#plt.show()
-
-# 4
-# the average tips vs hour of day
-hour_average_tips = tips_hour_average.values
-plt.scatter(hour_counts_pickup, hour_average_tips)
-plt.xlabel("#pickups")
-plt.ylabel("Average Tips")
-plt.title("Average tips at time of day vs pickup numbers")
-plt.legend()
-#plt.show()
-
-
-# plt.plot(x=hour_counts_pickup.index, y=tips_hour_average.values)
-# plt.xlabel('Hour of Day')
-# plt.ylabel('Average Tips')
-# plt.title('Average tips by Hour of Day')
-# plt.grid(True)
-# plt.show()
+# Visualization 4 is included in analysis technique 2.
 
 
 # Use of at least two analysis techniques such as multiple regression or logistic regression. In
 # addition you should highlight the success of such models and briefly explain various iterations
-X = taxi_data[["distance", 'fare']]
-Y = taxi_data['tip']
 
+# Analysis Technique 1: Multiple Regression
+X = taxi_data[["distance"]]
+taxi_data["payment"] = taxi_data["payment"].astype(str).str.strip()
+payment_dummies = pd.get_dummies(taxi_data["payment"], drop_first=True).astype(int)
+color_dummies = pd.get_dummies(taxi_data["color"], drop_first=True).astype(int)
+hour_dummies = pd.get_dummies(taxi_data["hour_of_pickup"], drop_first=True).astype(int)
+
+X = pd.concat([X, payment_dummies, color_dummies, hour_dummies], axis=1)
 X = sm.add_constant(X)
-modelofDurationVTip = sm.OLS(Y, X).fit()
+y = taxi_data['tip']
 
-print(modelofDurationVTip.summary())
+model = sm.OLS(y, X).fit()
+
+print(model.summary())
 
 
-# if not yellow, it's green based off of data
-X= taxi_data['tip']
-Y= taxi_data['is_yellow']
-LogitModelof_Color_to_tip = sm.Logit(Y,X)
-LogitModelof_Color_To_tip_Fit = LogitModelof_Color_to_tip.fit()
-print(LogitModelof_Color_To_tip_Fit.summary())
-odds_ratio = np.exp(LogitModelof_Color_To_tip_Fit.params)
-print(odds_ratio)
+# Analysis Technique 2: Logistic regression model: Distance x Fare
+# We chose this one because it's the only one that looks remotely nonlinear but not all over the place.
+plt.scatter(x=taxi_data['distance'], y=taxi_data['fare'])
+plt.xlabel('Distance')
+plt.ylabel('Fare')
+plt.show()
+
+taxi_data['fare_square'] = taxi_data['fare'] ** 2
+
+# Visualization 4
+plt.scatter(x=taxi_data['distance'], y=taxi_data['fare_square'])
+plt.xlabel('Distance')
+plt.ylabel('Fare squared')
+plt.show()
